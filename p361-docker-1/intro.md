@@ -2,7 +2,7 @@
 
 presented by Tanmoy + Clemens on 2021-06-04
 
-![docker meme](./assets/dockermeme.JPG)
+![docker meme](dockermeme.JPG)
 
 ## Agenda
 

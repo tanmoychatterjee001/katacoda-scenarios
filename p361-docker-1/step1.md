@@ -1,23 +1,78 @@
-# Create Own Docker Image
+# Create your own Docker Image
+## Task
+In P361 a team member by the name Ross Rossum recently joined. 
+He is an expert in both R and Python programming language.
 
-In P361 a team member by the name Ross Rossum recently joined. He is an expert in R and Python programming language.
-He has more than decades experience in coding in R and Python. 
-
-He has been assigned the first task of proving that multiplication of floating point numbers behave differently in R and 
-in Python. However he has to ensure that his code runs on his team members' system. Unfortunately all his team members are either who are either R or Python experts and do not have both R and Python installed on their systems.
+He thinks that 'pi' gives different precision results in R and Python. 
+Unfortunately all other p361 team-members are either R or Python experts 
+and do not have both R and Python installed on their systems. Hence they cannot test it out themselves
 Ross Rossum is also quite new to the Docker world.
 
+Can you help Ross Rossum in creating a docker image containing both R and Python so that he can show his findings without 
+each of the team-members having to fiddle with installation of R / Python on their laptops.
 
-He would like to use the following code for R
+## Solution
 
-`create `
+create a separate directory in `/root`for this task in your terminal and change to that dir
+for e.g. (you can also use the graphical right click options to do the same)
+```
+mkdir testdocker
+cd testdocker
+```
+Create the following files in that folder
 
-and the following code for python
+test.R
+``` 
+print("hello from R")
+print(pi)
+```
 
-`ddfsdfsd`
+test.py
+``` 
+import math
+print("hello from python")
+print(math.pi)
+```
 
-After which he would like to run these 2 codes one after the other and see the results
+test.sh
+```
+#!/bin/bash
+Rscript test.R
+python3 test.py
+```
 
-Can you help him in creating a single docker image with the follwing contents:
-* base-r  https://hub.docker.com/_/r-base
-* 
+Dockerfile
+```
+FROM r-base
+
+RUN apt update
+RUN apt -yq install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libsqlite3-dev libreadline-dev libffi-dev curl libbz2-dev
+RUN wget https://www.python.org/ftp/python/3.9.1/Python-3.9.1.tgz
+RUN tar -xf Python-3.9.1.tgz
+RUN cd Python-3.9.1 && ./configure && make -j8 build_all && make -j8 install
+
+COPY ./test.R ./test.py ./start.sh /
+RUN chmod +x /start.sh
+CMD ["/start.sh"]
+```
+
+`docker build -t r-py:latest .`
+
+`docker run r-py:latest`
+
+
+## Questions
+* What is happening when docker build command is executed? - concept of layers
+* What is happening when you run docker run <image> without specifying any other arguments - default cmd mentioned in the dockerfile is executed
+* Any guesses what will happen if the Dockerfile instead had the following code (try it out yourself)
+```
+FROM r-base
+COPY ./test.R /
+CMD ["Rscript", "test.R"]
+
+FROM python:3
+COPY ./test.py /
+CMD ["python3", "test.py"]
+```
+
+Multi-stage builds does not combine but overwrites so the above will only end up having python

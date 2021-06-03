@@ -21,6 +21,6 @@ Q3 is multiple choice question, requiring users to select all the correct answer
 
 Q4 Is the Docker Image OS dependent?
 
->>Q4: Is the Docker Image OS dependent? <<
+>><<
 ( ) Yes
 (*) No

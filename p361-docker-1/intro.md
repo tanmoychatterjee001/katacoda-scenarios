@@ -1,7 +1,8 @@
 # Docker - Best Practices and Tips for P361
 
-presented by Tanmoy + Clemens
-on 2021-06-04
+presented by Tanmoy + Clemens on 2021-06-04
+
+![docker meme](./assets/dockermeme.JPG)
 
 ## Agenda
 
